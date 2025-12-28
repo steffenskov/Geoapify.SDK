@@ -5,16 +5,16 @@ namespace Geoapify.SDK.Client;
 
 public class GeoapifyClient : IGeoapifyClient
 {
-	public GeoapifyClient(IHttpClientFactory httpClientFactory, string apiKey)
+	public GeoapifyClient(IHttpClientFactory httpClientFactory, TimeProvider timeProvider, string apiKey)
 	{
 		var serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
 		{
 			Converters = { new JsonStringEnumConverter() }
 		};
-		Geocoding = new GeocodingModule(new HttpClientFactoryWrapper(httpClientFactory, nameof(GeoapifyClient)), serializerOptions, apiKey);
+		Geocoding = new GeocodingModule(new HttpClientFactoryWrapper(httpClientFactory, nameof(GeoapifyClient)), serializerOptions, timeProvider, apiKey);
 	}
 
-	public GeoapifyClient(IHttpClientFactory httpClientFactory, IOptions<GeoapifyConfiguration> options) : this(httpClientFactory, options.Value.ApiKey)
+	public GeoapifyClient(IHttpClientFactory httpClientFactory, IOptions<GeoapifyConfiguration> options, TimeProvider timeProvider) : this(httpClientFactory, timeProvider, options.Value.ApiKey)
 	{
 	}
 

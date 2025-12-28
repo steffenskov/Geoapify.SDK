@@ -21,9 +21,10 @@ public class Address
 	public string StateCode { get; init; } = "";
 	public string Street { get; init; } = "";
 	public string Suburb { get; init; } = "";
+	public DateTimeOffset LastUpdated { get; init; }
 
 
-	static internal Address Create(GeocodingResult address)
+	static internal Address Create(GeocodingResult address, DateTimeOffset lastUpdated)
 	{
 		return new Address
 		{
@@ -50,7 +51,8 @@ public class Address
 			State = address.State ?? "",
 			StateCode = address.StateCode ?? "",
 			Street = address.Street ?? "",
-			Suburb = address.Suburb ?? ""
+			Suburb = address.Suburb ?? "",
+			LastUpdated = lastUpdated
 		};
 	}
 }

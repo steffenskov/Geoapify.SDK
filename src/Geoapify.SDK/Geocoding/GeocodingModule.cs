@@ -9,11 +9,13 @@ internal class GeocodingModule : IGeocodingModule
 	private readonly string _apiKey;
 	private readonly IHttpClientFactoryWrapper _httpClientFactory;
 	private readonly JsonSerializerOptions _serializerOptions;
+	private readonly TimeProvider _timeProvider;
 
-	public GeocodingModule(IHttpClientFactoryWrapper httpClientFactory, JsonSerializerOptions serializerOptions, string apiKey)
+	public GeocodingModule(IHttpClientFactoryWrapper httpClientFactory, JsonSerializerOptions serializerOptions, TimeProvider timeProvider, string apiKey)
 	{
 		_httpClientFactory = httpClientFactory;
 		_serializerOptions = serializerOptions;
+		_timeProvider = timeProvider;
 		_apiKey = apiKey;
 	}
 
@@ -70,7 +72,9 @@ internal class GeocodingModule : IGeocodingModule
 		var result = await JsonSerializer.DeserializeAsync<GeocodingJsonResponse>(stream, _serializerOptions, cancellationToken) ?? throw new InvalidOperationException("Could not deserialize GeocodingJsonResponse");
 #endif
 
-		return result.Results.Select(Address.Create);
+		var utcNow = _timeProvider.GetUtcNow();
+
+		return result.Results.Select(geocodingJson => Address.Create(geocodingJson, utcNow));
 	}
 }
 

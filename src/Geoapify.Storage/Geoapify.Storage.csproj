@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-        <Description>Adds MongoDB support for local storage of results from the Geoapify.SDK.</Description>
+        <Description>Adds abstract support for local storage of results from the Geoapify.SDK.</Description>
         <PackageProjectUrl>https://github.com/steffenskov/Geoapify.SDK</PackageProjectUrl>
-        <PackageTags>geoapify, mongodb</PackageTags>
+        <PackageTags>geoapify</PackageTags>
     </PropertyGroup>
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Geoapify.SDK\Geoapify.SDK.csproj"/>
-        <ProjectReference Include="..\Geoapify.Storage\Geoapify.Storage.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="MongoDB.Driver"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
     </ItemGroup>
+
 </Project>
