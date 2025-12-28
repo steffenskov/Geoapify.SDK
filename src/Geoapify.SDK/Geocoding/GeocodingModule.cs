@@ -64,10 +64,10 @@ internal class GeocodingModule : IGeocodingModule
 
 #if DEBUG
 		var json = await response.Content.ReadAsStringAsync(cancellationToken);
-		var result = JsonSerializer.Deserialize<GeocodingJsonResponse>(json, _serializerOptions) ?? throw new InvalidOperationException("Could not deserialize GeocodingResponse");
+		var result = JsonSerializer.Deserialize<GeocodingJsonResponse>(json, _serializerOptions) ?? throw new InvalidOperationException("Could not deserialize GeocodingJsonResponse");
 #else
 		await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-		var result = await JsonSerializer.DeserializeAsync<GeocodingJsonResponse>(stream, _serializerOptions, cancellationToken) ?? throw new InvalidOperationException("Could not deserialize GeocodingResponse");
+		var result = await JsonSerializer.DeserializeAsync<GeocodingJsonResponse>(stream, _serializerOptions, cancellationToken) ?? throw new InvalidOperationException("Could not deserialize GeocodingJsonResponse");
 #endif
 
 		return result.Results.Select(Address.Create);
