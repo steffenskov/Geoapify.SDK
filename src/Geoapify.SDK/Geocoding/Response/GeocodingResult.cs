@@ -28,6 +28,7 @@ internal class GeocodingResult
 
 	[JsonPropertyName("district")] public string? District { get; init; }
 
+
 	[JsonPropertyName("suburb")] public string? Suburb { get; init; }
 
 	[JsonPropertyName("street")] public string? Street { get; init; }
@@ -48,7 +49,7 @@ internal class GeocodingResult
 
 	[JsonPropertyName("category")] public string? Category { get; init; }
 
-	[JsonPropertyName("result_type")] public ResultTypes? ResultType { get; init; }
+	[JsonPropertyName("result_type")] public ResultTypes ResultType { get; init; }
 
 	[JsonPropertyName("rank")] public Rank? Rank { get; init; }
 
@@ -63,4 +64,5 @@ internal class GeocodingResult
 	[JsonPropertyName("plus_code_short")] public string? PlusCodeShort { get; init; }
 
 	[JsonPropertyName("distance")] public double? Distance { get; init; }
+	[JsonPropertyName("municipality")] public string? Municipality { get; init; }
 }

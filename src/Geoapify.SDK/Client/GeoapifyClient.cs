@@ -7,7 +7,10 @@ public class GeoapifyClient : IGeoapifyClient
 {
 	public GeoapifyClient(IHttpClientFactory httpClientFactory, string apiKey)
 	{
-		var serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+		var serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+		{
+			Converters = { new JsonStringEnumConverter() }
+		};
 		Geocoding = new GeocodingModule(new HttpClientFactoryWrapper(httpClientFactory, nameof(GeoapifyClient)), serializerOptions, apiKey);
 	}
 

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Geoapify.SDK.Geocoding.Response;
 
 namespace Geoapify.UnitTests.Geocoding;
@@ -77,7 +78,10 @@ public class GeocodingJsonResponseTests
 		           """;
 
 		// Act
-		var result = JsonSerializer.Deserialize<GeocodingJsonResponse>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+		var result = JsonSerializer.Deserialize<GeocodingJsonResponse>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web)
+		{
+			Converters = { new JsonStringEnumConverter() }
+		});
 
 		// Assert
 		Assert.NotNull(result);
