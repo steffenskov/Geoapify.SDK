@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Description>A FOSS SDK for Geoapify's API written in .Net.</Description>
         <PackageProjectUrl>https://github.com/steffenskov/Geoapify.SDK</PackageProjectUrl>
-        <PackageTags>Geoapify</PackageTags>
+        <PackageTags>geoapify, sdk</PackageTags>
     </PropertyGroup>
     <ItemGroup>
         <None Include="../../README.md" Pack="true" PackagePath="\"/>

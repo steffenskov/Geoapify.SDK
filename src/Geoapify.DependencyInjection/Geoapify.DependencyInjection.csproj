@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Description>Adds Dependency Injection support for the Geoapify.SDK..</Description>
+        <Description>Adds Dependency Injection support for the Geoapify.SDK.</Description>
         <PackageProjectUrl>https://github.com/steffenskov/Geoapify.SDK</PackageProjectUrl>
-        <PackageTags>Geoapify, dependency-injection</PackageTags>
+        <PackageTags>geoapify, dependency-injection</PackageTags>
     </PropertyGroup>
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\"/>
