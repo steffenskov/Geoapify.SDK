@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_items", "_items", "{E16511AA-3915-465E-8B55-1770C0DA8CDF}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{67235412-F555-4E00-A6EE-63957744FC2B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5D354398-2450-4FCA-805B-23B58D5531B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geoapify.SDK", "src\Geoapify.SDK\Geoapify.SDK.csproj", "{4DA0C009-E0A1-40F2-885D-00614BE2B6DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geoapify.IntegrationTests", "tests\Geoapify.IntegrationTests\Geoapify.IntegrationTests.csproj", "{7121F1E0-5AD9-4682-9C22-E8011C53B3E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geoapify.UnitTests", "tests\Geoapify.UnitTests\Geoapify.UnitTests.csproj", "{21EDC0F1-8E0F-401F-BB26-4B2B51E39012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geoapify.DependencyInjection", "src\Geoapify.DependencyInjection\Geoapify.DependencyInjection.csproj", "{B3C5E031-E05F-4E88-A348-DFC1DC103E1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4DA0C009-E0A1-40F2-885D-00614BE2B6DD} = {67235412-F555-4E00-A6EE-63957744FC2B}
+		{7121F1E0-5AD9-4682-9C22-E8011C53B3E4} = {5D354398-2450-4FCA-805B-23B58D5531B4}
+		{21EDC0F1-8E0F-401F-BB26-4B2B51E39012} = {5D354398-2450-4FCA-805B-23B58D5531B4}
+		{B3C5E031-E05F-4E88-A348-DFC1DC103E1B} = {67235412-F555-4E00-A6EE-63957744FC2B}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DA0C009-E0A1-40F2-885D-00614BE2B6DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA0C009-E0A1-40F2-885D-00614BE2B6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA0C009-E0A1-40F2-885D-00614BE2B6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA0C009-E0A1-40F2-885D-00614BE2B6DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7121F1E0-5AD9-4682-9C22-E8011C53B3E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7121F1E0-5AD9-4682-9C22-E8011C53B3E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7121F1E0-5AD9-4682-9C22-E8011C53B3E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7121F1E0-5AD9-4682-9C22-E8011C53B3E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21EDC0F1-8E0F-401F-BB26-4B2B51E39012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21EDC0F1-8E0F-401F-BB26-4B2B51E39012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21EDC0F1-8E0F-401F-BB26-4B2B51E39012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21EDC0F1-8E0F-401F-BB26-4B2B51E39012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3C5E031-E05F-4E88-A348-DFC1DC103E1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3C5E031-E05F-4E88-A348-DFC1DC103E1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3C5E031-E05F-4E88-A348-DFC1DC103E1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3C5E031-E05F-4E88-A348-DFC1DC103E1B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
