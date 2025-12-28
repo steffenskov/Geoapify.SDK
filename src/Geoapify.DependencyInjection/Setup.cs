@@ -3,6 +3,7 @@ using Geoapify.SDK.Client;
 using Geoapify.SDK.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+// ReSharper disable once CheckNamespace
 public static class GeoapifySetup
 {
 	public static IServiceCollection AddGeoapify(this IServiceCollection services, string apiKey)
