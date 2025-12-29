@@ -6,7 +6,7 @@ Adds MongoDB support for local storage of results from the Geoapify.SDK.
 
 After adding this package, add this to your Dependency Injection setup:
 
-```
+```csharp
 services.AddGeoapify(yourApiKey)
         .AddMongoDBStorage(db, "address-collection-name"); // <-- This line is new
 ```

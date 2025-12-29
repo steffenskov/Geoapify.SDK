@@ -8,7 +8,7 @@ This package is normally not used in isolation, as it contains abstract definiti
 
 After adding this package, add this to your Dependency Injection setup:
 
-```
+```csharp
 services.AddGeoapify(yourApiKey)
         .AddStorageUpdaterService(); // <-- This line is new
 ```
@@ -17,7 +17,7 @@ Do note that you also need to add some form of database for storage, e.g. `Geoap
 
 Furthermore if you want to react to addresses that has changed, use this:
 
-```
+```csharp
 StorageUpdaterService.AddressChanged += YourHandler; // AddressChanged event is raised ONLY for addresses that actually changed
 ```
 

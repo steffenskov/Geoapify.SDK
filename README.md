@@ -6,7 +6,7 @@ A FOSS SDK for Geoapify's API written in .Net.
 
 I strongly suggest using Dependency Injection via the package [Geoapify.DepedencyInjection](https://www.nuget.org/packages/Geoapify.DepedencyInjection) like this:
 
-```
+```csharp
 var apiKey = "YOUR_KEY"; // Probably read this from a secret somewhere
 
 services.AddGeoapify(apiKey);
@@ -21,7 +21,7 @@ This allows you to store a copy of any relevant addresses locally (in your datab
 
 A full example of that configuration:
 
-```
+```csharp
 var apiKey = "YOUR_KEY"; // Probably read this from a secret somewhere
 var client = new MongoClient(mongoConnectionstring);
 var db = client.GetDatabase("your-database");
