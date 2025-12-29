@@ -43,5 +43,6 @@ public class ContainerFixture : IAsyncLifetime
 	public async ValueTask DisposeAsync()
 	{
 		await _mongoContainer.DisposeAsync();
+		await Provider.DisposeAsync();
 	}
 }

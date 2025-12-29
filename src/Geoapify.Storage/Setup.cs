@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 // ReSharper disable once CheckNamespace
 public static class Setup
 {
-	private static bool _injected;
-
 	/// <summary>
 	///     Adds the StorageUpdaterService which will refresh data in your IAddressRepository periodically.
 	/// </summary>
@@ -18,8 +16,7 @@ public static class Setup
 	/// </param>
 	public static GeoapifyServiceCollection AddStorageUpdaterService(this GeoapifyServiceCollection services, TimeSpan refreshDataAfter)
 	{
-		var alreadyInjected = Interlocked.Exchange(ref _injected, true);
-		if (alreadyInjected)
+		if (services.ServiceCollection.Any(d => d.ImplementationType == typeof(StorageUpdaterService)))
 		{
 			return services;
 		}

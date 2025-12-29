@@ -11,8 +11,6 @@ using MongoDB.Driver;
 
 public static class Setup
 {
-	private static bool _injected;
-
 	/// <summary>
 	///     Adds Mongo DB support for local storage of addresses.
 	/// </summary>
@@ -25,10 +23,9 @@ public static class Setup
 	/// </param>
 	public static GeoapifyServiceCollection AddMongoDBStorage(this GeoapifyServiceCollection services, IMongoDatabase database, string addressCollectionName, bool registerGuidSerializer = true)
 	{
-		var alreadyInjected = Interlocked.Exchange(ref _injected, true);
-		if (alreadyInjected)
+		if (services.ServiceCollection.Any(d => d.ServiceType == typeof(IAddressRepository)))
 		{
-			return services;
+			throw new InvalidOperationException("An IAddressRepository service is already registered.");
 		}
 
 		if (registerGuidSerializer)

@@ -21,12 +21,12 @@ internal class AddressRepository : IAddressRepository
 		return await find.SingleOrDefaultAsync(cancellationToken);
 	}
 
-	public async Task<Address> UpsertAsync(Address address, CancellationToken cancellationToken)
+	public async Task<Address> UpsertAsync(Address entity, CancellationToken cancellationToken)
 	{
-		await _collection.ReplaceOneAsync(e => e.Id == address.Id, address,
+		await _collection.ReplaceOneAsync(e => e.Id == entity.Id, entity,
 			new ReplaceOptions { IsUpsert = true },
 			cancellationToken);
-		return address;
+		return entity;
 	}
 
 	public async Task<IEnumerable<Address>> GetExpiredAsync(DateTimeOffset expirationDate, CancellationToken cancellationToken = default)

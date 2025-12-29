@@ -1,8 +1,10 @@
 using Geoapify.SDK.Client;
+using Geoapify.SDK.ReverseGeocoding.Inputs;
 using Geoapify.SDK.Shared.Outputs;
 using Geoapify.Storage.Configuration;
 using Geoapify.Storage.Repositories;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Geoapify.Storage.Services;
@@ -10,15 +12,17 @@ namespace Geoapify.Storage.Services;
 public class StorageUpdaterService : BackgroundService
 {
 	private readonly IGeoapifyClient _client;
+	private readonly ILogger<StorageUpdaterService>? _logger;
 	private readonly TimeSpan _refreshDataAfter;
 	private readonly IAddressRepository _repository;
 	private readonly TimeProvider _timeProvider;
 
-	internal StorageUpdaterService(IAddressRepository repository, IGeoapifyClient client, IOptions<StorageUpdaterServiceConfiguration> options, TimeProvider timeProvider)
+	internal StorageUpdaterService(IAddressRepository repository, IGeoapifyClient client, IOptions<StorageUpdaterServiceConfiguration> options, TimeProvider timeProvider, ILogger<StorageUpdaterService>? logger)
 	{
 		_repository = repository;
 		_client = client;
 		_timeProvider = timeProvider;
+		_logger = logger;
 		_refreshDataAfter = options.Value.RefreshDataAfter;
 	}
 
@@ -32,7 +36,15 @@ public class StorageUpdaterService : BackgroundService
 	{
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			await UpdateExpiredAddressesAsync(stoppingToken);
+			try
+			{
+				await UpdateExpiredAddressesAsync(stoppingToken);
+			}
+			catch (Exception ex)
+			{
+				_logger?.LogError(ex, "Exception: {Message}", ex.Message);
+			}
+
 			await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
 		}
 	}
@@ -44,7 +56,11 @@ public class StorageUpdaterService : BackgroundService
 		var expiredAddresses = await _repository.GetExpiredAsync(expirationDate, cancellationToken);
 		foreach (var expiredAddress in expiredAddresses)
 		{
-			var updatedAddress = (await _client.ReverseGeocoding.SearchAsync(expiredAddress.Coordinate, cancellationToken: cancellationToken)).SingleOrDefault();
+			var updatedAddress = (await _client.ReverseGeocoding.SearchAsync(expiredAddress.Coordinate, new ReverseGeocodingSearchArguments
+				{
+					Limit = 1
+				},
+				cancellationToken)).SingleOrDefault();
 
 			if (updatedAddress is null)
 			{
