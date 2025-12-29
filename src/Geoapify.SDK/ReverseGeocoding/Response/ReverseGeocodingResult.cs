@@ -1,8 +1,8 @@
 using Geoapify.SDK.Shared.Response;
 
-namespace Geoapify.SDK.Geocoding.Response;
+namespace Geoapify.SDK.ReverseGeocoding.Response;
 
-internal class GeocodingResult : IGeocodingResult
+internal class ReverseGeocodingResult : IGeocodingResult
 {
 	// Coordinates
 	[JsonPropertyName("lon")] public double Longitude { get; init; }
@@ -18,11 +18,11 @@ internal class GeocodingResult : IGeocodingResult
 
 	[JsonPropertyName("state_code")] public string? StateCode { get; init; }
 
+	[JsonPropertyName("city")] public string? City { get; init; }
+
 	[JsonPropertyName("county")] public string? County { get; init; }
 
 	[JsonPropertyName("county_code")] public string? CountyCode { get; init; }
-
-	[JsonPropertyName("city")] public string? City { get; init; }
 
 	[JsonPropertyName("postcode")] public string? Postcode { get; init; }
 

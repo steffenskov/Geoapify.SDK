@@ -1,7 +1,11 @@
-using Geoapify.SDK.Geocoding.Outputs;
+using Geoapify.SDK.Shared.Outputs;
 
 namespace Geoapify.Storage.Repositories;
 
-public interface IAddressRepository : IRepository<string, Address>
+/// <summary>
+///     Represents a database repository for addresses.
+/// </summary>
+public interface IAddressRepository : IRepository<Guid, Address>
 {
+	Task<IEnumerable<Address>> GetExpiredAsync(DateTimeOffset expirationDate, CancellationToken cancellationToken = default);
 }

@@ -1,9 +1,10 @@
-using Geoapify.SDK.Geocoding.Response;
+using Geoapify.SDK.Shared.Response;
 
-namespace Geoapify.SDK.Geocoding.Outputs;
+namespace Geoapify.SDK.Shared.Outputs;
 
-public class Address
+public record Address
 {
+	public Guid Id { get; init; } = Guid.Empty;
 	public string AddressLines { get; init; } = "";
 	public string City { get; init; } = "";
 	public Coordinate Coordinate { get; init; } = Coordinate.Empty;
@@ -13,7 +14,7 @@ public class Address
 	public string CountyCode { get; init; } = "";
 	public string District { get; init; } = "";
 	public string HouseNumber { get; init; } = "";
-	public string Id { get; init; } = "";
+	public string PlaceId { get; init; } = "";
 	public string Municipality { get; init; } = "";
 	public string Name { get; init; } = "";
 	public string Postcode { get; init; } = "";
@@ -23,8 +24,7 @@ public class Address
 	public string Suburb { get; init; } = "";
 	public DateTimeOffset LastUpdated { get; init; }
 
-
-	static internal Address Create(GeocodingResult address, DateTimeOffset lastUpdated)
+	static internal Address Create(IGeocodingResult address, DateTimeOffset lastUpdated)
 	{
 		return new Address
 		{
@@ -44,9 +44,10 @@ public class Address
 			CountyCode = address.CountyCode ?? "",
 			District = address.District ?? "",
 			HouseNumber = address.HouseNumber ?? "",
-			Id = address.PlaceId ?? throw new ArgumentException("PlaceId cannot be null", nameof(address)),
+			Id = CreateId(address.Latitude, address.Longitude),
 			Municipality = address.Municipality ?? "",
 			Name = address.Name ?? "",
+			PlaceId = address.PlaceId ?? throw new ArgumentException("PlaceId cannot be null", nameof(address)),
 			Postcode = address.Postcode ?? "",
 			State = address.State ?? "",
 			StateCode = address.StateCode ?? "",
@@ -55,9 +56,27 @@ public class Address
 			LastUpdated = lastUpdated
 		};
 	}
+
+	static internal Guid CreateId(double latitude, double longitude)
+	{
+		var latBytes = BitConverter.GetBytes(latitude);
+		var lonBytes = BitConverter.GetBytes(longitude);
+
+		return new Guid([.. latBytes, .. lonBytes]);
+	}
+
+	/// <summary>
+	///     Returns whether this has changed since `expiredAddress`.
+	/// </summary>
+	/// <param name="oldAddress">Old representation of same address to compare against</param>
+	/// <returns>True if something has changed, otherwise false</returns>
+	public bool HasChanged(Address oldAddress)
+	{
+		return oldAddress with { LastUpdated = LastUpdated } != this;
+	}
 }
 
-public class Coordinate
+public record Coordinate
 {
 	public double Latitude { get; init; }
 	public double Longitude { get; init; }

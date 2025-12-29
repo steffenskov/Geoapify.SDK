@@ -1,5 +1,5 @@
 using Geoapify.IntegrationTests.Configuration;
-using Geoapify.SDK.Geocoding.Outputs;
+using Geoapify.SDK.Shared.Outputs;
 using Geoapify.Storage.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +16,7 @@ public class AddressRepositoryTests : BaseTests
 	{
 		// Arrange
 		var repository = Provider.GetRequiredService<IAddressRepository>();
-		var id = Guid.CreateVersion7().ToString();
+		var id = Guid.CreateVersion7();
 		var address = new Address
 		{
 			Id = id,
@@ -38,7 +38,7 @@ public class AddressRepositoryTests : BaseTests
 	{
 		// Arrange
 		var repository = Provider.GetRequiredService<IAddressRepository>();
-		var id = Guid.CreateVersion7().ToString();
+		var id = Guid.CreateVersion7();
 
 		// Act
 		var result = await repository.GetAsync(id, TestContext.Current.CancellationToken);
@@ -52,8 +52,8 @@ public class AddressRepositoryTests : BaseTests
 	{
 		// Arrange
 		var repository = Provider.GetRequiredService<IAddressRepository>();
-		var expiredId = Guid.CreateVersion7().ToString();
-		var nonExpiredId = Guid.CreateVersion7().ToString();
+		var expiredId = Guid.CreateVersion7();
+		var nonExpiredId = Guid.CreateVersion7();
 		var expiredAddress = new Address
 		{
 			Id = expiredId,
@@ -69,7 +69,7 @@ public class AddressRepositoryTests : BaseTests
 		await repository.UpsertAsync(nonExpiredAddress, TestContext.Current.CancellationToken);
 
 		// Act
-		var result = (await repository.GetExpiredAsync(TestContext.Current.CancellationToken)).ToList();
+		var result = (await repository.GetExpiredAsync(DateTimeOffset.UtcNow.AddDays(-7), TestContext.Current.CancellationToken)).ToList();
 
 		// Assert
 		Assert.NotEmpty(result);

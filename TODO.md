@@ -1,3 +1,1 @@
-- Add support for reverse geocoding (required by the stuff below)
-- Add support for local caching of data including a timestamp for latest update
-- Add support for recurringly refreshing locally cached data based on their timestamps
+- Test StorageUpdaterService (unit test)

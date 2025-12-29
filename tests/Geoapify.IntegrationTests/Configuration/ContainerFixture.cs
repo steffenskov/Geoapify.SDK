@@ -35,8 +35,8 @@ public class ContainerFixture : IAsyncLifetime
 
 		var client = new MongoClient(_mongoContainer.GetConnectionString());
 		var db = client.GetDatabase("db");
-		services.AddGeoapify(apiKey);
-		services.AddGeoapifyMongoDBStorage(db, "addresses");
+		services.AddGeoapify(apiKey)
+			.AddMongoDBStorage(db, "addresses");
 		Provider = services.BuildServiceProvider();
 	}
 

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Geoapify.DependencyInjection;
 using Geoapify.SDK.Client;
 using Geoapify.SDK.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 // ReSharper disable once CheckNamespace
 public static class Setup
 {
-	public static IServiceCollection AddGeoapify(this IServiceCollection services, string apiKey)
+	public static GeoapifyServiceCollection AddGeoapify(this IServiceCollection services, string apiKey)
 	{
 		services.AddHttpClient<GeoapifyClient>(client =>
 		{
@@ -24,6 +25,6 @@ public static class Setup
 		});
 		services.AddSingleton(TimeProvider.System);
 		services.AddTransient<IGeoapifyClient, GeoapifyClient>();
-		return services;
+		return new GeoapifyServiceCollection(services);
 	}
 }

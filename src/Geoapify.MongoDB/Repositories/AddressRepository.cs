@@ -1,10 +1,10 @@
-using Geoapify.SDK.Geocoding.Outputs;
+using Geoapify.SDK.Shared.Outputs;
 using Geoapify.Storage.Repositories;
 using MongoDB.Driver;
 
 namespace Geoapify.MongoDB.Repositories;
 
-public class AddressRepository : IAddressRepository
+internal class AddressRepository : IAddressRepository
 {
 	private readonly IMongoCollection<Address> _collection;
 
@@ -14,7 +14,7 @@ public class AddressRepository : IAddressRepository
 		_collection.Indexes.CreateOne(new CreateIndexModel<Address>(Builders<Address>.IndexKeys.Ascending(x => x.LastUpdated)));
 	}
 
-	public async Task<Address?> GetAsync(string id, CancellationToken cancellationToken)
+	public async Task<Address?> GetAsync(Guid id, CancellationToken cancellationToken)
 	{
 		var find = _collection.Find(e => e.Id == id);
 
@@ -29,9 +29,9 @@ public class AddressRepository : IAddressRepository
 		return address;
 	}
 
-	public async Task<IEnumerable<Address>> GetExpiredAsync(CancellationToken cancellationToken = default)
+	public async Task<IEnumerable<Address>> GetExpiredAsync(DateTimeOffset expirationDate, CancellationToken cancellationToken = default)
 	{
-		var find = _collection.Find(e => e.LastUpdated < DateTimeOffset.UtcNow.AddDays(-7));
+		var find = _collection.Find(e => e.LastUpdated < expirationDate);
 
 		return await find.ToListAsync(cancellationToken);
 	}

@@ -4,12 +4,11 @@ Adds MongoDB support for local storage of results from the Geoapify.SDK.
 
 ## Usage
 
-After adding this package, just call
+After adding this package, add this to your Dependency Injection setup:
 
 ```
-services.AddGeoapifyMongoDBStorage(db, "address-collection-name");
+services.AddGeoapify(yourApiKey)
+        .AddMongoDBStorage(db, "address-collection-name"); // <-- This line is new
 ```
 
 And you'll have access to the `IAddressRepository` in your Dependency Injection system.
-
-OR you can just `new AddressRepository(db, "address-collection-name");` if you don't use Dependency Injection.
