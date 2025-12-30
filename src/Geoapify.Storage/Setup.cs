@@ -10,21 +10,27 @@ public static class Setup
 	///     Adds the StorageUpdaterService which will refresh data in your IAddressRepository periodically.
 	/// </summary>
 	/// <param name="services">Result from the .AddGeoapify() extension method</param>
-	/// <param name="refreshDataAfter">
-	///     How old data should be before being refreshed, do note that refreshing often will
-	///     consume more Geoapify credits.
+	/// <param name="configure">
+	///     Configuration of the service
 	/// </param>
-	public static GeoapifyServiceCollection AddStorageUpdaterService(this GeoapifyServiceCollection services, TimeSpan refreshDataAfter)
+	public static GeoapifyServiceCollection AddStorageUpdaterService(this GeoapifyServiceCollection services, Action<StorageUpdaterServiceConfiguration>? configure = null)
 	{
 		if (services.ServiceCollection.Any(d => d.ImplementationType == typeof(StorageUpdaterService)))
 		{
 			return services;
 		}
 
-		services.ServiceCollection.Configure<StorageUpdaterServiceConfiguration>(config =>
+		if (configure is not null)
 		{
-			config.RefreshDataAfter = refreshDataAfter;
-		});
+			services.ServiceCollection.Configure(configure);
+		}
+		else
+		{
+			services.ServiceCollection.Configure<StorageUpdaterServiceConfiguration>(_ => // Use default values
+			{
+			});
+		}
+
 		services.ServiceCollection.AddHostedService<StorageUpdaterService>();
 		return services;
 	}

@@ -76,4 +76,35 @@ public class AddressRepositoryTests : BaseTests
 		Assert.Contains(result, address => address.Id == expiredId);
 		Assert.DoesNotContain(result, address => address.Id == nonExpiredId);
 	}
+
+	[Fact]
+	public async Task GetExpiredAsync_ExpiredAndRetiredAddressExists_DoesNotReturnRetired()
+	{
+		// Arrange
+		var repository = Provider.GetRequiredService<IAddressRepository>();
+		var expiredId = Guid.CreateVersion7();
+		var retiredId = Guid.CreateVersion7();
+		var expiredAddress = new Address
+		{
+			Id = expiredId,
+			LastUpdated = DateTimeOffset.UtcNow.AddDays(-8)
+		};
+		var retiredAddress = new Address
+		{
+			Id = retiredId,
+			LastUpdated = DateTimeOffset.UtcNow.AddDays(-8),
+			Retired = true
+		};
+
+		await repository.UpsertAsync(expiredAddress, TestContext.Current.CancellationToken);
+		await repository.UpsertAsync(retiredAddress, TestContext.Current.CancellationToken);
+
+		// Act
+		var result = (await repository.GetExpiredAsync(DateTimeOffset.UtcNow.AddDays(-7), TestContext.Current.CancellationToken)).ToList();
+
+		// Assert
+		Assert.NotEmpty(result);
+		Assert.Contains(result, address => address.Id == expiredId);
+		Assert.DoesNotContain(result, address => address.Id == retiredId);
+	}
 }

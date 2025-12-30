@@ -14,6 +14,7 @@ services.AddGeoapify(yourApiKey)
 ```
 
 Do note that you also need to add some form of database for storage, e.g. `Geoapify.MongoDB`.
+And you can supply a `config => { }` argument to `AddStorageUpdaterService()` if you want to customize intervals etc.
 
 Furthermore if you want to react to addresses that has changed, use this:
 

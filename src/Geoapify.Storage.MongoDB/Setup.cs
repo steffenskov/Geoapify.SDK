@@ -1,5 +1,5 @@
 using Geoapify.DependencyInjection;
-using Geoapify.MongoDB.Repositories;
+using Geoapify.Storage.MongoDB.Repositories;
 using Geoapify.Storage.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
@@ -23,6 +23,8 @@ public static class Setup
 	/// </param>
 	public static GeoapifyServiceCollection AddMongoDBStorage(this GeoapifyServiceCollection services, IMongoDatabase database, string addressCollectionName, bool registerGuidSerializer = true)
 	{
+		ArgumentNullException.ThrowIfNull(database);
+		ArgumentNullException.ThrowIfNull(addressCollectionName);
 		if (services.ServiceCollection.Any(d => d.ServiceType == typeof(IAddressRepository)))
 		{
 			throw new InvalidOperationException("An IAddressRepository service is already registered.");

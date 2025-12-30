@@ -1,1 +1,2 @@
-- Test StorageUpdaterService (unit test)
+- Support for batched queries, especially relevant for the StorageUpdateService
+- Support for the remaining APIs

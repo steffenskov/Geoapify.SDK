@@ -23,7 +23,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Geoapify.DependencyInjection\Geoapify.DependencyInjection.csproj"/>
-        <ProjectReference Include="..\..\src\Geoapify.MongoDB\Geoapify.MongoDB.csproj"/>
+        <ProjectReference Include="..\..\src\Geoapify.Storage.MongoDB\Geoapify.Storage.MongoDB.csproj"/>
         <ProjectReference Include="..\..\src\Geoapify.SDK\Geoapify.SDK.csproj"/>
     </ItemGroup>
 

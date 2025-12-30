@@ -23,6 +23,7 @@ public record Address
 	public string Street { get; init; } = "";
 	public string Suburb { get; init; } = "";
 	public DateTimeOffset LastUpdated { get; init; }
+	public bool Retired { get; init; }
 
 	static internal Address Create(IGeocodingResult address, DateTimeOffset lastUpdated)
 	{
@@ -73,6 +74,15 @@ public record Address
 	public bool HasChanged(Address oldAddress)
 	{
 		return oldAddress with { LastUpdated = LastUpdated } != this;
+	}
+
+	/// <summary>
+	///     Returns the address marked as retired, used for addresses that can no longer be found through Reverse Geocoding BUT
+	///     are kept in local storage.
+	/// </summary>
+	public Address Retire()
+	{
+		return this with { Retired = true };
 	}
 }
 

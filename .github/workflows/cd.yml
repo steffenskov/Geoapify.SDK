@@ -11,6 +11,8 @@ concurrency:
 env:
   PROJECT_PATH: 'src/Geoapify.SDK/Geoapify.SDK.csproj'
   DI_PATH: 'src/Geoapify.DependencyInjection/Geoapify.DependencyInjection.csproj'
+  STORAGE_PATH: 'src/Geoapify.Storage/Geoapify.Storage.csproj'
+  MONGODB_PATH: 'src/Geoapify.Storage.MongoDB/Geoapify.Storage.MongoDB.csproj'
   SOLUTION_PATH: 'Geoapify.SDK.sln'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
@@ -61,6 +63,12 @@ jobs:
 
     - name: 'Pack DI project'
       run: dotnet pack ${{ env.DI_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+
+    - name: 'Pack Storage project'
+      run: dotnet pack ${{ env.STORAGE_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+
+    - name: 'Pack MongoDB project'
+      run: dotnet pack ${{ env.MONGODB_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
 #    - name: 'Push package'
 #      run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s ${{ env.NUGET_SOURCE_URL }} --skip-duplicate

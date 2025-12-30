@@ -12,18 +12,18 @@ namespace Geoapify.Storage.Services;
 public class StorageUpdaterService : BackgroundService
 {
 	private readonly IGeoapifyClient _client;
+	private readonly StorageUpdaterServiceConfiguration _configuration;
 	private readonly ILogger<StorageUpdaterService>? _logger;
-	private readonly TimeSpan _refreshDataAfter;
 	private readonly IAddressRepository _repository;
 	private readonly TimeProvider _timeProvider;
 
-	internal StorageUpdaterService(IAddressRepository repository, IGeoapifyClient client, IOptions<StorageUpdaterServiceConfiguration> options, TimeProvider timeProvider, ILogger<StorageUpdaterService>? logger)
+	public StorageUpdaterService(IAddressRepository repository, IGeoapifyClient client, IOptions<StorageUpdaterServiceConfiguration> options, TimeProvider timeProvider, ILogger<StorageUpdaterService>? logger)
 	{
 		_repository = repository;
 		_client = client;
 		_timeProvider = timeProvider;
 		_logger = logger;
-		_refreshDataAfter = options.Value.RefreshDataAfter;
+		_configuration = options.Value;
 	}
 
 	/// <summary>
@@ -45,13 +45,13 @@ public class StorageUpdaterService : BackgroundService
 				_logger?.LogError(ex, "Exception: {Message}", ex.Message);
 			}
 
-			await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+			await Task.Delay(_configuration.LoopDelay, stoppingToken);
 		}
 	}
 
-	private async Task UpdateExpiredAddressesAsync(CancellationToken cancellationToken)
+	protected async Task UpdateExpiredAddressesAsync(CancellationToken cancellationToken)
 	{
-		var expirationDate = _timeProvider.GetUtcNow().Add(-_refreshDataAfter);
+		var expirationDate = _timeProvider.GetUtcNow().Add(-_configuration.RefreshDataAfter);
 
 		var expiredAddresses = await _repository.GetExpiredAsync(expirationDate, cancellationToken);
 		foreach (var expiredAddress in expiredAddresses)
@@ -64,14 +64,14 @@ public class StorageUpdaterService : BackgroundService
 
 			if (updatedAddress is null)
 			{
-				// TODO: Mark address as EOL in repository so it no longer tries to update it
+				await _repository.UpsertAsync(expiredAddress.Retire(), cancellationToken);
 			}
 			else
 			{
 				await _repository.UpsertAsync(updatedAddress, cancellationToken);
 				if (updatedAddress.HasChanged(expiredAddress))
 				{
-					AddressChanged?.Invoke(updatedAddress);
+					AddressChanged?.Invoke(updatedAddress); // TODO: Consider using something else for raising events? This is cumbersome to unsubscribe from
 				}
 			}
 		}
