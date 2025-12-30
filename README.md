@@ -4,7 +4,7 @@ A FOSS SDK for Geoapify's API written in .Net.
 
 ## Usage
 
-I strongly suggest using Dependency Injection via the package [Geoapify.DepedencyInjection](https://www.nuget.org/packages/Geoapify.DepedencyInjection) like this:
+I strongly suggest using Dependency Injection via the package [Geoapify.DependencyInjection](https://www.nuget.org/packages/Geoapify.DependencyInjection) like this:
 
 ```csharp
 var apiKey = "YOUR_KEY"; // Probably read this from a secret somewhere
