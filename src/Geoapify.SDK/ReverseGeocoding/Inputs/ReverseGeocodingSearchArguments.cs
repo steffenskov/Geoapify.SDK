@@ -1,15 +1,12 @@
 using Geoapify.SDK.ValueObjects;
 
-namespace Geoapify.SDK.Geocoding.Inputs;
+namespace Geoapify.SDK.ReverseGeocoding.Inputs;
 
-public class GeocodingSearchArguments : IQueryStringArgument
+public class ReverseGeocodingSearchArguments : IQueryStringArgument
 {
 	public LocationTypes? Type { get; set; }
 	public Language? Language { get; set; }
-	public uint Limit { get; set; } = 5;
-
-	// TODO: Add Filter
-	// TODO: Add Bias
+	public uint Limit { get; set; } = 1;
 
 	public IEnumerable<QueryStringValue> ToQueryString()
 	{

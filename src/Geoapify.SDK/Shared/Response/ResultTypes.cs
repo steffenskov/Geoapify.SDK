@@ -1,6 +1,6 @@
-namespace Geoapify.SDK.Geocoding.Response;
+namespace Geoapify.SDK.Shared.Response;
 
-public enum ResultTypes
+internal enum ResultTypes
 {
 	Unknown,
 	Amenity,

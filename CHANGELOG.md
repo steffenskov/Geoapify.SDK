@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0] - 2025-12-28
+## [1.0.0] - 2025-12-30
 
 ### Added
 
-- First version, contains Geocoding part of API
+- Geocoding API support
+- Reverse geocoding API support
+- (Optional) Storage of addresses in your own MongoDB
+- (Optional) Service that monitors your stored addresses and notifies when they have updates (e.g. a street name change)

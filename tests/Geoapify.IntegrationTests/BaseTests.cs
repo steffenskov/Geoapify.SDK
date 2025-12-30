@@ -12,5 +12,8 @@ public abstract class BaseTests
 	protected BaseTests(ContainerFixture fixture)
 	{
 		_client = fixture.Provider.GetRequiredService<IGeoapifyClient>();
+		Provider = fixture.Provider;
 	}
+
+	public ServiceProvider Provider { get; }
 }

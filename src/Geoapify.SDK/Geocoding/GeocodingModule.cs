@@ -1,20 +1,17 @@
 using Geoapify.SDK.Geocoding.Inputs;
-using Geoapify.SDK.Geocoding.Outputs;
 using Geoapify.SDK.Geocoding.Response;
+using Geoapify.SDK.Shared;
+using Geoapify.SDK.Shared.Outputs;
 
 namespace Geoapify.SDK.Geocoding;
 
-internal class GeocodingModule : IGeocodingModule
+internal class GeocodingModule : BaseModule, IGeocodingModule
 {
-	private readonly string _apiKey;
-	private readonly IHttpClientFactoryWrapper _httpClientFactory;
-	private readonly JsonSerializerOptions _serializerOptions;
+	private readonly TimeProvider _timeProvider;
 
-	public GeocodingModule(IHttpClientFactoryWrapper httpClientFactory, JsonSerializerOptions serializerOptions, string apiKey)
+	public GeocodingModule(IHttpClientFactoryWrapper httpClientFactory, JsonSerializerOptions serializerOptions, TimeProvider timeProvider, string apiKey) : base(httpClientFactory, serializerOptions, apiKey, "geocode/search")
 	{
-		_httpClientFactory = httpClientFactory;
-		_serializerOptions = serializerOptions;
-		_apiKey = apiKey;
+		_timeProvider = timeProvider;
 	}
 
 	public async Task<IEnumerable<Address>> SearchAsync(string text, GeocodingSearchArguments? arguments = null, CancellationToken cancellationToken = default)
@@ -46,31 +43,13 @@ internal class GeocodingModule : IGeocodingModule
 		return await ExecuteSearchAsync(queryStringBuilder, cancellationToken);
 	}
 
-	private QueryStringBuilder CreateQueryStringBuilder()
+	private async Task<IEnumerable<Address>> ExecuteSearchAsync(QueryStringBuilder queryStringBuilder, CancellationToken cancellationToken = default)
 	{
-		return new QueryStringBuilder()
-			.With("apiKey", _apiKey)
-			.With("format", "json");
-	}
+		var result = await ExecuteQueryAsync<GeocodingJsonResponse>(queryStringBuilder, cancellationToken);
 
-	private async Task<IEnumerable<Address>> ExecuteSearchAsync(QueryStringBuilder queryStringBuilder, CancellationToken cancellationToken)
-	{
-		var url = $"geocode/search?{queryStringBuilder.Build()}";
+		var utcNow = _timeProvider.GetUtcNow();
 
-		var client = _httpClientFactory.CreateClient();
-		var response = await client.GetAsync(url, cancellationToken);
-
-		response.EnsureSuccessStatusCode();
-
-#if DEBUG
-		var json = await response.Content.ReadAsStringAsync(cancellationToken);
-		var result = JsonSerializer.Deserialize<GeocodingJsonResponse>(json, _serializerOptions) ?? throw new InvalidOperationException("Could not deserialize GeocodingJsonResponse");
-#else
-		await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-		var result = await JsonSerializer.DeserializeAsync<GeocodingJsonResponse>(stream, _serializerOptions, cancellationToken) ?? throw new InvalidOperationException("Could not deserialize GeocodingJsonResponse");
-#endif
-
-		return result.Results.Select(Address.Create);
+		return result.Results.Select(geocodingJson => Address.Create(geocodingJson, utcNow));
 	}
 }
 
