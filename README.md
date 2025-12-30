@@ -28,7 +28,7 @@ var db = client.GetDatabase("your-database");
 
 services.AddGeoapify(apiKey) // Injects the IGeoapifyClient
         .AddMongoDBStorage(db, "address-collection-name") // Injects an IAddressRepository for MongoDB
-        .AddStorageUpdaterService(TimeSpan.FromDays(7)); // Injects the StorageUpdaterService that'll check for updates to addresses once their date is 7 days or older
+        .AddStorageUpdaterService(); // Injects the StorageUpdaterService that'll check for updates to addresses
 ```
 
 # Documentation
