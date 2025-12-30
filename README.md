@@ -14,8 +14,9 @@ services.AddGeoapify(apiKey);
 
 And you'll have access to the `IGeoapifyClient` in your Dependency Injection system.
 
-Furthermore if you want updates to addresses as they change (addresses *do* change over time, albeit not often), you should add both [Geoapify.Storage](https://www.nuget.org/packages/Geoapify.Storage) and a form of database (or provide one
-yourself, see the notes for that package).
+Furthermore if you want updates to addresses as they change (addresses *do* change over time, albeit not often), you should add both [Geoapify.Storage](https://www.nuget.org/packages/Geoapify.Storage) and a form of database
+(e.g. [Geoapify.Storage.MongoDB](https://www.nuget.org/packages/Geoapify.Storage.MongoDB) or provide one
+yourself, see the notes for the Storage package).
 
 This allows you to store a copy of any relevant addresses locally (in your database), and have a service continuously check for changes to that address and inform you of those.
 
