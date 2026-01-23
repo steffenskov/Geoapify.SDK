@@ -17,14 +17,16 @@ Do note that you also need to add some form of database for storage, e.g. [Geoap
 
 Also you can supply a `config => { }` argument to `AddStorageUpdaterService()` if you want to customize intervals etc.
 
-Furthermore if you want to react to addresses that has changed, use this:
+Furthermore if you want to react to addresses that has changed, implement one (or more) `IAddressChangedHandler` classes and add those to the Dependency Injection setup.
 
 ```csharp
-StorageUpdaterService.AddressChanged += YourHandler; // AddressChanged event is raised ONLY for addresses that actually changed
+services.AddGeoapify(yourApiKey)
+        .AddStorageUpdaterService()
+        .AddAddressChangedHandler<MyHandler>(); // <-- This line is new
 ```
 
 ## Custom implementation
 
-If you want to provide your own implementation, just implement the following interfaces and dependency inject them:
+If you want to provide your own storage implementation, just implement the following interfaces and dependency inject them:
 
 - `IAddressRepository`

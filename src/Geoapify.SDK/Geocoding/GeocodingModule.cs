@@ -1,7 +1,5 @@
 using Geoapify.SDK.Geocoding.Inputs;
 using Geoapify.SDK.Geocoding.Response;
-using Geoapify.SDK.Shared;
-using Geoapify.SDK.Shared.Outputs;
 
 namespace Geoapify.SDK.Geocoding;
 
@@ -18,12 +16,10 @@ internal class GeocodingModule : BaseModule, IGeocodingModule
 	{
 		var queryStringBuilder = CreateQueryStringBuilder()
 			.With("text", text);
-		if (arguments is not null)
-		{
-			queryStringBuilder.With(arguments);
-		}
+		arguments ??= new GeocodingSearchArguments();
+		queryStringBuilder.With(arguments);
 
-		return await ExecuteSearchAsync(queryStringBuilder, cancellationToken);
+		return await ExecuteSearchAsync(queryStringBuilder, arguments.Language, cancellationToken);
 	}
 
 	public async Task<IEnumerable<Address>> SearchAsync(GeocodingStructuredSearch model, GeocodingSearchArguments? arguments = null, CancellationToken cancellationToken = default)
@@ -33,23 +29,22 @@ internal class GeocodingModule : BaseModule, IGeocodingModule
 			throw new ArgumentException("No arguments given for search", nameof(model));
 		}
 
+		arguments ??= new GeocodingSearchArguments();
+
 		var queryStringBuilder = CreateQueryStringBuilder()
 			.With(model);
-		if (arguments is not null)
-		{
-			queryStringBuilder.With(arguments);
-		}
+		queryStringBuilder.With(arguments);
 
-		return await ExecuteSearchAsync(queryStringBuilder, cancellationToken);
+		return await ExecuteSearchAsync(queryStringBuilder, arguments.Language, cancellationToken);
 	}
 
-	private async Task<IEnumerable<Address>> ExecuteSearchAsync(QueryStringBuilder queryStringBuilder, CancellationToken cancellationToken = default)
+	private async Task<IEnumerable<Address>> ExecuteSearchAsync(QueryStringBuilder queryStringBuilder, Language language, CancellationToken cancellationToken = default)
 	{
 		var result = await ExecuteQueryAsync<GeocodingJsonResponse>(queryStringBuilder, cancellationToken);
 
 		var utcNow = _timeProvider.GetUtcNow();
 
-		return result.Results.Select(geocodingJson => Address.Create(geocodingJson, utcNow));
+		return result.Results.Select(geocodingJson => Address.Create(geocodingJson, language, utcNow));
 	}
 }
 
@@ -64,7 +59,10 @@ public interface IGeocodingModule
 	///     Finds up to 5 results by default.
 	/// </summary>
 	/// <param name="text">Text to search for</param>
-	/// <param name="arguments">Optional: Further filtration arguments, including number of results to find.</param>
+	/// <param name="arguments">
+	///     Optional: Further filtration arguments, including number of results to find (default: default properties of
+	///     GeocodingSearchArguments).
+	/// </param>
 	/// <param name="cancellationToken">CancellationToken</param>
 	/// <returns>List of addresses found</returns>
 	Task<IEnumerable<Address>> SearchAsync(string text, GeocodingSearchArguments? arguments = null, CancellationToken cancellationToken = default);
@@ -74,7 +72,10 @@ public interface IGeocodingModule
 	///     Finds up to 5 results by default.
 	/// </summary>
 	/// <param name="model">Structured model used for searching</param>
-	/// <param name="arguments">Optional: Further filtration arguments, including number of results to find.</param>
+	/// <param name="arguments">
+	///     Optional: Further filtration arguments, including number of results to find (default: default properties of
+	///     GeocodingSearchArguments).
+	/// </param>
 	/// <param name="cancellationToken">CancellationToken</param>
 	/// <returns>List of addresses found</returns>
 	Task<IEnumerable<Address>> SearchAsync(GeocodingStructuredSearch model, GeocodingSearchArguments? arguments = null, CancellationToken cancellationToken = default);

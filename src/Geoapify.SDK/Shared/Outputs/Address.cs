@@ -22,10 +22,12 @@ public record Address
 	public string StateCode { get; init; } = "";
 	public string Street { get; init; } = "";
 	public string Suburb { get; init; } = "";
+	public Language Language { get; init; } = Language.English;
 	public DateTimeOffset LastUpdated { get; init; }
 	public bool Retired { get; init; }
 
-	static internal Address Create(IGeocodingResult address, DateTimeOffset lastUpdated)
+
+	static internal Address Create(IGeocodingResult address, Language language, DateTimeOffset lastUpdated)
 	{
 		return new Address
 		{
@@ -45,7 +47,7 @@ public record Address
 			CountyCode = address.CountyCode ?? "",
 			District = address.District ?? "",
 			HouseNumber = address.HouseNumber ?? "",
-			Id = CreateId(address.Latitude, address.Longitude),
+			Id = AddressId.Create(address.Latitude, address.Longitude),
 			Municipality = address.Municipality ?? "",
 			Name = address.Name ?? "",
 			PlaceId = address.PlaceId ?? throw new ArgumentException("PlaceId cannot be null", nameof(address)),
@@ -54,16 +56,9 @@ public record Address
 			StateCode = address.StateCode ?? "",
 			Street = address.Street ?? "",
 			Suburb = address.Suburb ?? "",
+			Language = language,
 			LastUpdated = lastUpdated
 		};
-	}
-
-	static internal Guid CreateId(double latitude, double longitude)
-	{
-		var latBytes = BitConverter.GetBytes(latitude);
-		var lonBytes = BitConverter.GetBytes(longitude);
-
-		return new Guid([.. latBytes, .. lonBytes]);
 	}
 
 	/// <summary>

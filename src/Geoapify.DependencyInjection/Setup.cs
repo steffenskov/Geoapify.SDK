@@ -7,6 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 // ReSharper disable once CheckNamespace
 public static class Setup
 {
+	/// <summary>
+	///     Adds the IGeoapifyClient to the Dependency Injection services, using the given apiKey.
+	/// </summary>
+	/// <param name="services">IServiceCollection to add the service to.</param>
+	/// <param name="apiKey">Your Geoapify Api key to use.</param>
+	/// <returns>GeoapifyServiceCollection for Fluent configuration.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if given an empty Api key</exception>
+	/// <exception cref="InvalidOperationException">Throw if invoked twice on the same IServiceCollection</exception>
 	public static GeoapifyServiceCollection AddGeoapify(this IServiceCollection services, string apiKey)
 	{
 		if (string.IsNullOrWhiteSpace(apiKey))
