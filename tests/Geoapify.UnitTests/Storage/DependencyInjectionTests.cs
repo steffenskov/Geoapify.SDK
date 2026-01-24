@@ -1,5 +1,6 @@
 using Geoapify.DependencyInjection;
 using Geoapify.SDK.Client;
+using Geoapify.SDK.Shared.Outputs;
 using Geoapify.Storage.Configuration;
 using Geoapify.Storage.Repositories;
 using Geoapify.Storage.Services;
@@ -153,5 +154,31 @@ public class AddStorageUpdaterServiceTests
 
 		Assert.NotNull(result);
 		Assert.Same(geoapifyServices, result);
+	}
+
+	[Fact]
+	public void AddAddressChangedHandler_RegistersAsInterface()
+	{
+		// Arrange
+		var services = new ServiceCollection();
+		var geoapifyServices = new GeoapifyServiceCollection(services);
+
+		// Act
+		geoapifyServices.AddAddressChangedHandler<FakeAddressChangedHandler>();
+
+		// Assert
+		var serviceProvider = services.BuildServiceProvider();
+		var handlers = serviceProvider.GetRequiredService<IEnumerable<IAddressChangedHandler>>().ToList();
+
+		var handler = Assert.Single(handlers);
+		Assert.IsType<FakeAddressChangedHandler>(handler);
+	}
+}
+
+file sealed class FakeAddressChangedHandler : IAddressChangedHandler
+{
+	public ValueTask HandleAsync(Address updatedAddress)
+	{
+		throw new NotImplementedException();
 	}
 }
