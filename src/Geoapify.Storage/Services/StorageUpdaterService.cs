@@ -1,5 +1,6 @@
 using Geoapify.SDK.Client;
 using Geoapify.SDK.ReverseGeocoding.Inputs;
+using Geoapify.SDK.Shared.Outputs;
 using Geoapify.Storage.Configuration;
 using Geoapify.Storage.Repositories;
 using Microsoft.Extensions.Hosting;
@@ -68,19 +69,24 @@ public class StorageUpdaterService : BackgroundService
 				await _repository.UpsertAsync(updatedAddress, cancellationToken);
 				if (updatedAddress.HasChanged(expiredAddress))
 				{
-					foreach (var handler in _changeHandlers)
-					{
-						try
-						{
-							await handler.HandleAsync(updatedAddress);
-						}
-						catch (Exception ex)
-						{
-							var handlerType = handler.GetType();
-							_logger?.LogError(ex, "Exception when invoking IAddressChangedNotificationHandler {Handler}: {Message}", handlerType.FullName ?? handlerType.Name, ex.Message);
-						}
-					}
+					await NotifyHandlersAsync(updatedAddress);
 				}
+			}
+		}
+	}
+
+	private async Task NotifyHandlersAsync(Address updatedAddress)
+	{
+		foreach (var handler in _changeHandlers)
+		{
+			try
+			{
+				await handler.HandleAsync(updatedAddress);
+			}
+			catch (Exception ex)
+			{
+				var handlerType = handler.GetType();
+				_logger?.LogError(ex, "Exception when invoking {Handler}: {Message}", handlerType.FullName ?? handlerType.Name, ex.Message);
 			}
 		}
 	}
