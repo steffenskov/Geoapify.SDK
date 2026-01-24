@@ -28,7 +28,7 @@ public class StorageUpdaterServiceTests
 
 		repository.GetExpiredAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).ThrowsAsync(new UnreachableException());
 
-		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, logger);
+		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, [], logger);
 		var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
 		// Act
@@ -47,7 +47,8 @@ public class StorageUpdaterServiceTests
 	public async Task UpdateExpiredAddressesAsync_HasExpiredAddress_UpdatesItAndRaisesEvent()
 	{
 		// Arrange
-		Address? addressFromChangedEvent = null;
+		var handler = new FakeAddressChangedHandler();
+
 		Address? addressUpserted = null;
 		var repository = Substitute.For<IAddressRepository>();
 		var client = Substitute.For<IGeoapifyClient>();
@@ -81,25 +82,13 @@ public class StorageUpdaterServiceTests
 			{
 				addressUpserted = callInfo.Arg<Address>();
 			});
-		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, logger);
-		var addressChangedHandler = (Address address) =>
-		{
-			addressFromChangedEvent = address;
-		};
-		StorageUpdaterService.AddressChanged += addressChangedHandler;
+		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, [handler], logger);
 
 		// Act
-		try
-		{
-			await updaterService.UpdateExpiredAddressesAsyncPublic(TestContext.Current.CancellationToken);
-		}
-		finally
-		{
-			StorageUpdaterService.AddressChanged -= addressChangedHandler;
-		}
+		await updaterService.UpdateExpiredAddressesAsyncPublic(TestContext.Current.CancellationToken);
 
 		// Assert
-		Assert.NotNull(addressFromChangedEvent);
+		var addressFromChangedEvent = Assert.Single(handler.ChangedAddresses);
 		Assert.Equal("Updated", addressFromChangedEvent.Name);
 
 		Assert.NotNull(addressUpserted);
@@ -110,7 +99,7 @@ public class StorageUpdaterServiceTests
 	public async Task UpdateExpiredAddressesAsync_HasExpiredAddressWithoutChanges_UpsertsTheSameAddress()
 	{
 		// Arrange
-		Address? addressFromChangedEvent = null;
+		var handler = new FakeAddressChangedHandler();
 		Address? addressUpserted = null;
 		var repository = Substitute.For<IAddressRepository>();
 		var client = Substitute.For<IGeoapifyClient>();
@@ -144,25 +133,13 @@ public class StorageUpdaterServiceTests
 			{
 				addressUpserted = callInfo.Arg<Address>();
 			});
-		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, logger);
-		var addressChangedHandler = (Address address) =>
-		{
-			addressFromChangedEvent = address;
-		};
-		StorageUpdaterService.AddressChanged += addressChangedHandler;
+		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, [handler], logger);
 
 		// Act
-		try
-		{
-			await updaterService.UpdateExpiredAddressesAsyncPublic(TestContext.Current.CancellationToken);
-		}
-		finally
-		{
-			StorageUpdaterService.AddressChanged -= addressChangedHandler;
-		}
+		await updaterService.UpdateExpiredAddressesAsyncPublic(TestContext.Current.CancellationToken);
 
 		// Assert
-		Assert.Null(addressFromChangedEvent);
+		Assert.Empty(handler.ChangedAddresses);
 
 		Assert.NotNull(addressUpserted);
 		Assert.Equal("Expired", addressUpserted.Name);
@@ -172,7 +149,7 @@ public class StorageUpdaterServiceTests
 	public async Task UpdateExpiredAddressesAsync_HasExpiredAddressThatIsObsolete_RetiresAddress()
 	{
 		// Arrange
-		Address? addressFromChangedEvent = null;
+		var handler = new FakeAddressChangedHandler();
 		Address? addressUpserted = null;
 		var repository = Substitute.For<IAddressRepository>();
 		var client = Substitute.For<IGeoapifyClient>();
@@ -200,25 +177,13 @@ public class StorageUpdaterServiceTests
 			{
 				addressUpserted = callInfo.Arg<Address>();
 			});
-		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, logger);
-		var addressChangedHandler = (Address address) =>
-		{
-			addressFromChangedEvent = address;
-		};
-		StorageUpdaterService.AddressChanged += addressChangedHandler;
+		var updaterService = new FakeStorageUpdaterService(repository, client, options, timeProvider, [handler], logger);
 
 		// Act
-		try
-		{
-			await updaterService.UpdateExpiredAddressesAsyncPublic(TestContext.Current.CancellationToken);
-		}
-		finally
-		{
-			StorageUpdaterService.AddressChanged -= addressChangedHandler;
-		}
+		await updaterService.UpdateExpiredAddressesAsyncPublic(TestContext.Current.CancellationToken);
 
 		// Assert
-		Assert.Null(addressFromChangedEvent);
+		Assert.Empty(handler.ChangedAddresses);
 
 		Assert.NotNull(addressUpserted);
 		Assert.Equal("Expired", addressUpserted.Name);
@@ -228,8 +193,8 @@ public class StorageUpdaterServiceTests
 
 file class FakeStorageUpdaterService : StorageUpdaterService
 {
-	internal FakeStorageUpdaterService(IAddressRepository repository, IGeoapifyClient client, IOptions<StorageUpdaterServiceConfiguration> options, TimeProvider timeProvider, ILogger<StorageUpdaterService>? logger) : base(repository, client, options,
-		timeProvider, logger)
+	public FakeStorageUpdaterService(IAddressRepository repository, IGeoapifyClient client, IOptions<StorageUpdaterServiceConfiguration> options, TimeProvider timeProvider, IEnumerable<IAddressChangedHandler> changeHandlers,
+		ILogger<StorageUpdaterService>? logger) : base(repository, client, options, timeProvider, changeHandlers, logger)
 	{
 	}
 
@@ -242,5 +207,16 @@ file class FakeStorageUpdaterService : StorageUpdaterService
 	public async Task UpdateExpiredAddressesAsyncPublic(CancellationToken cancellationToken)
 	{
 		await UpdateExpiredAddressesAsync(cancellationToken);
+	}
+}
+
+file class FakeAddressChangedHandler : IAddressChangedHandler
+{
+	public readonly List<Address> ChangedAddresses = [];
+
+	public ValueTask HandleAsync(Address updatedAddress)
+	{
+		ChangedAddresses.Add(updatedAddress);
+		return ValueTask.CompletedTask;
 	}
 }
