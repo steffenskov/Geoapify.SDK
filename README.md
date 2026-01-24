@@ -29,7 +29,8 @@ var db = client.GetDatabase("your-database");
 
 services.AddGeoapify(apiKey) // Injects the IGeoapifyClient
         .AddMongoDBStorage(db, "address-collection-name") // Injects an IAddressRepository for MongoDB
-        .AddStorageUpdaterService(); // Injects the StorageUpdaterService that'll check for updates to addresses
+        .AddStorageUpdaterService() // Injects the StorageUpdaterService that'll check for updates to addresses
+        .AddAddressChangedHandler<MyHandler>(); // Inject a handler to be invoked whenever an address is updated by the StorageUpdaterService
 ```
 
 # Documentation
