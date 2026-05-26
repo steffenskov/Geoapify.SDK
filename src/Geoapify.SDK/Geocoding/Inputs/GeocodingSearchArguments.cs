@@ -42,7 +42,7 @@ public class GeocodingSearchArguments : IQueryStringArgument
 			yield return new QueryStringValue("limit", Limit.ToString());
 		}
 
-		if (Filters.Length > 0)
+		if (Filters is { Length: > 0 })
 		{
 			var filterValue = string.Join("|", Filters.Select(filter => filter.ToQueryString()));
 			yield return new QueryStringValue("filter", filterValue);

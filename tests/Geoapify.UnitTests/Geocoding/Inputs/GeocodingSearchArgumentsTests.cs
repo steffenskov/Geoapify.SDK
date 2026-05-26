@@ -14,19 +14,18 @@ public class GeocodingSearchArgumentsTests
 		{
 			Filters =
 			[
-				Filter.ByCountry(CountryCode.Denmark)
+				Filter.ByCountryCodes(CountryCode.Denmark)
 			]
 		};
 
 		// Act
-		var queryString = arguments.ToQueryString().ToArray();
+		var queryString = arguments.ToQueryString().ToList();
 
 		// Assert
 		var filterArgument = queryString.Single(qs => qs.Key == "filter");
 
 		Assert.Equal("countrycode:dk", filterArgument.Value);
 	}
-
 
 	[Fact]
 	public void ToQueryString_WithFilters_IncludesPipedFilters()
@@ -36,13 +35,13 @@ public class GeocodingSearchArgumentsTests
 		{
 			Filters =
 			[
-				Filter.ByCountry(CountryCode.Denmark, CountryCode.United_Kingdom_of_Great_Britain_and_Northern_Ireland),
+				Filter.ByCountryCodes(CountryCode.Denmark, CountryCode.United_Kingdom_of_Great_Britain_and_Northern_Ireland),
 				new FakeFilter()
 			]
 		};
 
 		// Act
-		var queryString = arguments.ToQueryString().ToArray();
+		var queryString = arguments.ToQueryString().ToList();
 
 		// Assert
 		var filterArgument = queryString.Single(qs => qs.Key == "filter");
@@ -57,7 +56,23 @@ public class GeocodingSearchArgumentsTests
 		var arguments = new GeocodingSearchArguments();
 
 		// Act
-		var queryString = arguments.ToQueryString().ToArray();
+		var queryString = arguments.ToQueryString().ToList();
+
+		// Assert
+		Assert.DoesNotContain(queryString, qs => qs.Key == "filter");
+	}
+
+	[Fact]
+	public void ToQueryString_FiltersSetToNull_OutputWithoutFilter()
+	{
+		// Arrange
+		var arguments = new GeocodingSearchArguments
+		{
+			Filters = null!
+		};
+
+		// Act
+		var queryString = arguments.ToQueryString().ToList();
 
 		// Assert
 		Assert.DoesNotContain(queryString, qs => qs.Key == "filter");

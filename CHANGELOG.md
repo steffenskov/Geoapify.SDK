@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.0] - 2026-05-26
 
-- Added `Filter` to `GeocodingSearchArgument`, currently only with Country based filtering supported.
+- Added `Filters` property to `GeocodingSearchArguments`, currently only with Country based filtering supported.
 
 ## [1.2.0] - 2026-03-06
 
