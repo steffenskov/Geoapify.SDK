@@ -49,6 +49,7 @@ public enum CountryCode
 	[Description("cu")] Cuba,
 	[Description("cy")] Cyprus,
 	[Description("cz")] Czechia,
+	[Description("cd")] Democratic_Republic_of_Congo,
 	[Description("dk")] Denmark,
 	[Description("dj")] Djibouti,
 	[Description("dm")] Dominica,
