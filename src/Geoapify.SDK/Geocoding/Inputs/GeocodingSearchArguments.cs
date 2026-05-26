@@ -1,3 +1,5 @@
+using Geoapify.SDK.Geocoding.Inputs.Filters;
+
 namespace Geoapify.SDK.Geocoding.Inputs;
 
 public class GeocodingSearchArguments : IQueryStringArgument
@@ -17,7 +19,13 @@ public class GeocodingSearchArguments : IQueryStringArgument
 	/// </summary>
 	public uint Limit { get; set; } = 5;
 
-	// TODO: Add Filter
+	/// <summary>
+	///     Filters to apply to search, defaults to empty, which means no filtering.
+	///     Possible Filter implementations can be found in the <see cref="Geoapify.SDK.Geocoding.Inputs.Filters" /> namespace
+	///     When using multiple filters, they're AND'ed together.
+	/// </summary>
+	public Filter[] Filters { get; set; } = [];
+
 	// TODO: Add Bias
 
 	public IEnumerable<QueryStringValue> ToQueryString()
@@ -32,6 +40,12 @@ public class GeocodingSearchArguments : IQueryStringArgument
 		if (Limit > 0)
 		{
 			yield return new QueryStringValue("limit", Limit.ToString());
+		}
+
+		if (Filters is { Length: > 0 })
+		{
+			var filterValue = string.Join("|", Filters.Select(filter => filter.ToQueryString()));
+			yield return new QueryStringValue("filter", filterValue);
 		}
 	}
 }
