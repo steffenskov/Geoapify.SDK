@@ -1,15 +1,15 @@
-using Geoapify.SDK.Geocoding.Inputs.Filters;
+using Geoapify.SDK.Geocoding.Inputs.SearchAreas;
 using Geoapify.SDK.ValueObjects;
 
-namespace Geoapify.UnitTests.Geocoding.Inputs.Filters;
+namespace Geoapify.UnitTests.Geocoding.Inputs.SearchAreas;
 
-public class CountryCodeFilterTests
+public class CountryCodeSearchAreaTests
 {
 	[Fact]
 	public void ToQueryString_NullCountryCode_Throws()
 	{
 		// Act && Assert
-		var ex = Assert.Throws<ArgumentNullException>(() => new CountryCodeFilter(null!));
+		var ex = Assert.Throws<ArgumentNullException>(() => new CountryCodeSearchArea(null!));
 		Assert.Equal("countryCodes", ex.ParamName);
 	}
 
@@ -17,7 +17,7 @@ public class CountryCodeFilterTests
 	public void ToQueryString_NoCountryCode_Throws()
 	{
 		// Act && Assert
-		var ex = Assert.Throws<ArgumentException>(() => new CountryCodeFilter());
+		var ex = Assert.Throws<ArgumentException>(() => new CountryCodeSearchArea());
 
 		Assert.Equal("At least one country code is required (Parameter 'countryCodes')", ex.Message);
 	}
@@ -26,10 +26,10 @@ public class CountryCodeFilterTests
 	public void ToQueryString_SingleCountryCode_ReturnsSingleValue()
 	{
 		// Arrange
-		var filter = new CountryCodeFilter(CountryCode.Denmark);
+		var searchArea = new CountryCodeSearchArea(CountryCode.Denmark);
 
 		// Act
-		var queryString = filter.ToQueryString();
+		var queryString = ((ISearchArea)searchArea).ToQueryString();
 
 		// Assert
 		Assert.Equal("countrycode:dk", queryString);
@@ -39,10 +39,10 @@ public class CountryCodeFilterTests
 	public void ToQueryString_MultipleCountryCodes_ReturnsCommaSeparated()
 	{
 		// Arrange
-		var filter = new CountryCodeFilter(CountryCode.Denmark, CountryCode.United_Kingdom_of_Great_Britain_and_Northern_Ireland);
+		var searchArea = new CountryCodeSearchArea(CountryCode.Denmark, CountryCode.United_Kingdom_of_Great_Britain_and_Northern_Ireland);
 
 		// Act
-		var queryString = filter.ToQueryString();
+		var queryString = ((ISearchArea)searchArea).ToQueryString();
 
 		// Assert
 		Assert.Equal("countrycode:dk,gb", queryString);

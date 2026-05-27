@@ -1,4 +1,6 @@
+using Geoapify.SDK.Geocoding.Inputs.Biases;
 using Geoapify.SDK.Geocoding.Inputs.Filters;
+using Geoapify.SDK.Geocoding.Inputs.SearchAreas;
 
 namespace Geoapify.SDK.Geocoding.Inputs;
 
@@ -20,13 +22,19 @@ public class GeocodingSearchArguments : IQueryStringArgument
 	public uint Limit { get; set; } = 5;
 
 	/// <summary>
-	///     Filters to apply to search, defaults to empty, which means no filtering.
-	///     Possible Filter implementations can be found in the <see cref="Geoapify.SDK.Geocoding.Inputs.Filters" /> namespace
+	///     Filters to apply to search, defaults to all properties set to null, which means no filtering.
 	///     When using multiple filters, they're AND'ed together.
+	///     <seealso cref="https://apidocs.geoapify.com/docs/geocoding/forward-geocoding/" />
 	/// </summary>
-	public Filter[] Filters { get; set; } = [];
+	public Filter Filters { get; } = new();
 
-	// TODO: Add Bias
+	/// <summary>
+	///     Biases to apply to search, defaults to all properties set to null, which results in countrycode:auto bias, where
+	///     geoapify will base its bias on the client IP.
+	///     When using multiple biases, they're OR'ed together.
+	///     <seealso cref="https://apidocs.geoapify.com/docs/geocoding/forward-geocoding/" />
+	/// </summary>
+	public Bias Biases { get; } = new();
 
 	public IEnumerable<QueryStringValue> ToQueryString()
 	{
@@ -42,10 +50,16 @@ public class GeocodingSearchArguments : IQueryStringArgument
 			yield return new QueryStringValue("limit", Limit.ToString());
 		}
 
-		if (Filters is { Length: > 0 })
+		var filterQueryStringValue = ((ISearchAreaComposer)Filters).ToQueryString();
+		if (filterQueryStringValue is not null)
 		{
-			var filterValue = string.Join("|", Filters.Select(filter => filter.ToQueryString()));
-			yield return new QueryStringValue("filter", filterValue);
+			yield return filterQueryStringValue;
+		}
+
+		var biasQueryStringValue = ((ISearchAreaComposer)Biases).ToQueryString();
+		if (biasQueryStringValue is not null)
+		{
+			yield return biasQueryStringValue;
 		}
 	}
 }

@@ -1,10 +1,10 @@
-namespace Geoapify.SDK.Geocoding.Inputs.Filters;
+namespace Geoapify.SDK.Geocoding.Inputs.SearchAreas;
 
-public class CountryCodeFilter : Filter
+public sealed class CountryCodeSearchArea : ISearchArea
 {
 	private readonly ICollection<CountryCode> _countryCodes;
 
-	public CountryCodeFilter(params ICollection<CountryCode> countryCodes)
+	public CountryCodeSearchArea(params ICollection<CountryCode> countryCodes)
 	{
 		ArgumentNullException.ThrowIfNull(countryCodes);
 		if (countryCodes.Count == 0)
@@ -15,7 +15,7 @@ public class CountryCodeFilter : Filter
 		_countryCodes = countryCodes;
 	}
 
-	override internal string ToQueryString()
+	string ISearchArea.ToQueryString()
 	{
 		return $"countrycode:{string.Join(",", _countryCodes.Select(code => code.GetDescription()))}";
 	}
