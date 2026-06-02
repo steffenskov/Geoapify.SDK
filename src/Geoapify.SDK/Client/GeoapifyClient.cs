@@ -14,6 +14,7 @@ public class GeoapifyClient : IGeoapifyClient
 		};
 		var httpClientFactoryWrapper = new HttpClientFactoryWrapper(httpClientFactory, nameof(GeoapifyClient));
 		Geocoding = new GeocodingModule(httpClientFactoryWrapper, serializerOptions, timeProvider, apiKey);
+		Autocomplete = new AutocompleteModule(httpClientFactoryWrapper, serializerOptions, timeProvider, apiKey);
 		ReverseGeocoding = new ReverseGeocodingModule(httpClientFactoryWrapper, serializerOptions, timeProvider, apiKey);
 	}
 
@@ -21,12 +22,14 @@ public class GeoapifyClient : IGeoapifyClient
 	{
 	}
 
+	public IAutocompleteModule Autocomplete { get; }
 	public IGeocodingModule Geocoding { get; }
 	public IReverseGeocodingModule ReverseGeocoding { get; }
 }
 
 public interface IGeoapifyClient
 {
+	IAutocompleteModule Autocomplete { get; }
 	IGeocodingModule Geocoding { get; }
 	IReverseGeocodingModule ReverseGeocoding { get; }
 }

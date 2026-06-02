@@ -4,13 +4,13 @@ using Geoapify.SDK.ValueObjects;
 
 namespace Geoapify.UnitTests.Geocoding.Inputs;
 
-public class GeocodingSearchArgumentsTests
+public class FakeGeocodingArgumentsTests
 {
 	[Fact]
 	public void ToQueryString_SingleFilter_IncludesFilter()
 	{
 		// Arrange
-		var arguments = new GeocodingSearchArguments
+		var arguments = new FakeGeocodingArguments
 		{
 			Filters =
 			{
@@ -31,7 +31,7 @@ public class GeocodingSearchArgumentsTests
 	public void ToQueryString_WithFilters_IncludesPipedFilters()
 	{
 		// Arrange
-		var arguments = new GeocodingSearchArguments
+		var arguments = new FakeGeocodingArguments
 		{
 			Filters =
 			{
@@ -53,7 +53,7 @@ public class GeocodingSearchArgumentsTests
 	public void ToQueryString_NoFilters_OutputWithoutFilter()
 	{
 		// Arrange
-		var arguments = new GeocodingSearchArguments();
+		var arguments = new FakeGeocodingArguments();
 
 		// Act
 		var queryString = arguments.ToQueryString().ToList();
@@ -66,7 +66,7 @@ public class GeocodingSearchArgumentsTests
 	public void ToQueryString_SingleBias_IncludesBias()
 	{
 		// Arrange
-		var arguments = new GeocodingSearchArguments
+		var arguments = new FakeGeocodingArguments
 		{
 			Biases =
 			{
@@ -87,7 +87,7 @@ public class GeocodingSearchArgumentsTests
 	public void ToQueryString_WithBiases_IncludesPipedBiases()
 	{
 		// Arrange
-		var arguments = new GeocodingSearchArguments
+		var arguments = new FakeGeocodingArguments
 		{
 			Biases =
 			{
@@ -109,7 +109,7 @@ public class GeocodingSearchArgumentsTests
 	public void ToQueryString_NoBiases_OutputWithoutBias()
 	{
 		// Arrange
-		var arguments = new GeocodingSearchArguments();
+		var arguments = new FakeGeocodingArguments();
 
 		// Act
 		var queryString = arguments.ToQueryString().ToList();
@@ -117,4 +117,8 @@ public class GeocodingSearchArgumentsTests
 		// Assert
 		Assert.DoesNotContain(queryString, qs => qs.Key == "bias");
 	}
+}
+
+file sealed class FakeGeocodingArguments : BaseGeocodingArguments
+{
 }

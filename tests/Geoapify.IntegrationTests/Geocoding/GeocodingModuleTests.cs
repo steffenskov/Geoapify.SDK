@@ -1,5 +1,6 @@
 using Geoapify.IntegrationTests.Configuration;
 using Geoapify.SDK.Geocoding.Inputs;
+using Geoapify.SDK.Geocoding.Inputs.SearchAreas;
 using Geoapify.SDK.ValueObjects;
 
 namespace Geoapify.IntegrationTests.Geocoding;
@@ -96,5 +97,24 @@ public class GeocodingModuleTests : BaseTests
 		// Assert
 		Assert.NotEmpty(result);
 		Assert.True(result.Count > 1);
+	}
+
+	[Fact]
+	public async Task SearchAsync_PartialTextInDenmark_ReturnsEmpty()
+	{
+		// Arrange
+		var address = "Vejl";
+
+		// Act
+		var result = (await _client.Geocoding.SearchAsync(address, new GeocodingSearchArguments
+		{
+			Filters =
+			{
+				CountryCode = new CountryCodeSearchArea(CountryCode.Denmark)
+			}
+		}, TestContext.Current.CancellationToken)).ToList();
+
+		// Assert
+		Assert.Empty(result);
 	}
 }
