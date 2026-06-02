@@ -34,7 +34,7 @@ internal class AutocompleteModule : BaseModule, IAutocompleteModule
 
 /// <summary>
 ///     Forward Geocoding SDK used to search out addresses based on text.
-///     <seealso href="https://apidocs.geoapify.com/docs/geocoding/forward-geocoding/" />
+///     <seealso href="https://apidocs.geoapify.com/docs/geocoding/autocomplete//" />
 /// </summary>
 public interface IAutocompleteModule
 {
@@ -45,7 +45,7 @@ public interface IAutocompleteModule
 	/// <param name="text">Text to search for</param>
 	/// <param name="arguments">
 	///     Optional: Further filtration arguments, including number of results to find (default: default properties of
-	///     GeocodingSearchArguments).
+	///     GeocodingAutocompleteArguments).
 	/// </param>
 	/// <param name="cancellationToken">CancellationToken</param>
 	/// <returns>List of addresses found</returns>

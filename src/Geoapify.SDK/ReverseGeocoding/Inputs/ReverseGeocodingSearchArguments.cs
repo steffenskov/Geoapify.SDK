@@ -21,7 +21,7 @@ public class ReverseGeocodingSearchArguments : IQueryStringArgument
 	{
 		if (Type.HasValue)
 		{
-			yield return new QueryStringValue("type", Type.Value.ToString().ToLower());
+			yield return new QueryStringValue("type", Type.Value.ToString().ToLowerInvariant());
 		}
 
 		yield return new QueryStringValue("lang", Language.GetDescription());

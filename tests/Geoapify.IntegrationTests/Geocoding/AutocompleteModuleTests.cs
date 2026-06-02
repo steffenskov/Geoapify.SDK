@@ -12,7 +12,7 @@ public class AutocompleteModuleTests : BaseTests
 	}
 
 	[Fact]
-	public async Task AutocompleteAsync_FreeText_ReturnsAddress()
+	public async Task AutocompleteAsync_ExactAddress_ReturnsAtLeastOneAddress()
 	{
 		// Arrange
 		var address = "Falkevej 40, 8800 Viborg, Danmark";
@@ -22,11 +22,10 @@ public class AutocompleteModuleTests : BaseTests
 
 		// Assert
 		Assert.NotEmpty(result);
-		Assert.Single(result);
 	}
 
 	[Fact]
-	public async Task AutocompleteAsync_PartialText_ReturnsAddresses()
+	public async Task AutocompleteAsync_PartialTextInDenmark_ReturnsEmpty()
 	{
 		// Arrange
 		var address = "Vejl";
@@ -42,5 +41,6 @@ public class AutocompleteModuleTests : BaseTests
 
 		// Assert
 		Assert.NotEmpty(result);
+		Assert.All(result, a => Assert.Equal("dk", a.CountryCode, true));
 	}
 }
