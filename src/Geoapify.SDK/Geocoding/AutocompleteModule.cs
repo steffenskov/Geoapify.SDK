@@ -33,13 +33,13 @@ internal class AutocompleteModule : BaseModule, IAutocompleteModule
 }
 
 /// <summary>
-///     Forward Geocoding SDK used to search out addresses based on text.
+///     Forward Geocoding SDK used to perform autocomplete for addresses based on text.
 ///     <seealso href="https://apidocs.geoapify.com/docs/geocoding/autocomplete//" />
 /// </summary>
 public interface IAutocompleteModule
 {
 	/// <summary>
-	///     Search for one or more addresses via free-form text.
+	///     Autocomplete for one or more addresses via free-form text.
 	///     Finds up to 5 results by default.
 	/// </summary>
 	/// <param name="text">Text to search for</param>
