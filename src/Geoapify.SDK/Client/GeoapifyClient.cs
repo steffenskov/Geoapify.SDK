@@ -1,6 +1,5 @@
 ﻿using Geoapify.SDK.Configuration;
 using Geoapify.SDK.Geocoding;
-using Geoapify.SDK.JsonConverters;
 using Geoapify.SDK.ReverseGeocoding;
 
 namespace Geoapify.SDK.Client;
