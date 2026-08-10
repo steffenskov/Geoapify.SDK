@@ -11,7 +11,7 @@ public class GeoapifyClient : IGeoapifyClient
 	{
 		var serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
 		{
-			Converters = { new JsonStringEnumConverter(), new FlexibleStringJsonConverter() }
+			Converters = { new JsonStringEnumConverter() }
 		};
 		var httpClientFactoryWrapper = new HttpClientFactoryWrapper(httpClientFactory, nameof(GeoapifyClient));
 		Geocoding = new GeocodingModule(httpClientFactoryWrapper, serializerOptions, timeProvider, apiKey);

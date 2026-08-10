@@ -1,3 +1,4 @@
+using Geoapify.SDK.JsonConverters;
 using Geoapify.SDK.Shared.Response;
 
 namespace Geoapify.SDK.ReverseGeocoding.Response;
@@ -38,7 +39,9 @@ internal class ReverseGeocodingResult : IGeocodingResult
 	// Formatted Address
 	[JsonPropertyName("formatted")] public string? Formatted { get; init; }
 
-	[JsonPropertyName("address_line1")] public string? AddressLine1 { get; init; }
+	[JsonPropertyName("address_line1")] 
+	[JsonConverter(typeof(FlexibleStringJsonConverter))]
+	public string? AddressLine1 { get; init; }
 
 	[JsonPropertyName("address_line2")] public string? AddressLine2 { get; init; }
 
