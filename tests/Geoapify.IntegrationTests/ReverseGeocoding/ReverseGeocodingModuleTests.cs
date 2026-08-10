@@ -11,6 +11,22 @@ public class ReverseGeocodingModuleTests : BaseTests
 	}
 
 	[Fact]
+	public async Task SearchAsync_LatLongDoNotExist_ReturnsEmptyAddress()
+	{
+		// Arrange
+		var latitude = 0;
+		var longitude = 4.5;
+
+		// Act
+		var result = (await _client.ReverseGeocoding.SearchAsync(latitude, longitude, cancellationToken: TestContext.Current.CancellationToken)).ToList();
+
+		// Assert
+		Assert.NotEmpty(result);
+		Assert.Single(result);
+		Assert.Equal("0", result[0].AddressLines);
+	}
+
+	[Fact]
 	public async Task SearchAsync_LatLongExists_ReturnsAddress()
 	{
 		// Arrange

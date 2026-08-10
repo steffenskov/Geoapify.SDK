@@ -1,5 +1,6 @@
 ﻿using Geoapify.SDK.Configuration;
 using Geoapify.SDK.Geocoding;
+using Geoapify.SDK.JsonConverters;
 using Geoapify.SDK.ReverseGeocoding;
 
 namespace Geoapify.SDK.Client;
@@ -10,7 +11,7 @@ public class GeoapifyClient : IGeoapifyClient
 	{
 		var serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
 		{
-			Converters = { new JsonStringEnumConverter() }
+			Converters = { new JsonStringEnumConverter(), new FlexibleStringJsonConverter() }
 		};
 		var httpClientFactoryWrapper = new HttpClientFactoryWrapper(httpClientFactory, nameof(GeoapifyClient));
 		Geocoding = new GeocodingModule(httpClientFactoryWrapper, serializerOptions, timeProvider, apiKey);

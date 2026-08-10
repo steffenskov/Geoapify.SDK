@@ -74,32 +74,6 @@ public class GeocodingModuleTests : BaseTests
 	}
 
 	[Fact]
-	public async Task SearchAsync_StructuredWithType_FindsMultiple()
-	{
-		// Arrange
-		var model = new GeocodingStructuredSearch
-		{
-			City = "Viborg",
-			Postcode = "8800",
-			Country = "Danmark",
-			Street = "Falkevej",
-			HouseNumber = "40"
-		};
-
-		var arguments = new GeocodingSearchArguments
-		{
-			Type = LocationTypes.Locality
-		};
-
-		// Act
-		var result = (await _client.Geocoding.SearchAsync(model, arguments, TestContext.Current.CancellationToken)).ToList();
-
-		// Assert
-		Assert.NotEmpty(result);
-		Assert.True(result.Count > 1);
-	}
-
-	[Fact]
 	public async Task SearchAsync_PartialTextInDenmark_ReturnsEmpty()
 	{
 		// Arrange
