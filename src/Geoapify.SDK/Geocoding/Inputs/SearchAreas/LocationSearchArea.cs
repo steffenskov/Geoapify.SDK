@@ -1,12 +1,11 @@
 namespace Geoapify.SDK.Geocoding.Inputs.SearchAreas;
 
-public class CircleSearchArea : ISearchArea
+public sealed class LocationSearchArea : ISearchArea
 {
 	private readonly double _latitude;
 	private readonly double _longitude;
-	private readonly uint _radiusInMeters;
 
-	public CircleSearchArea(double longitude, double latitude, uint radiusInMeters)
+	public LocationSearchArea(double longitude, double latitude)
 	{
 		if (latitude is < -90 or > 90)
 		{
@@ -18,20 +17,12 @@ public class CircleSearchArea : ISearchArea
 			throw new ArgumentOutOfRangeException(nameof(longitude), "Longitude must be between -180.0 and 180.0");
 		}
 
-		if (radiusInMeters == 0)
-		{
-			throw new ArgumentException("Radius must be greater than 0", nameof(radiusInMeters));
-		}
-
 		_longitude = longitude;
 		_latitude = latitude;
-		_radiusInMeters = radiusInMeters;
 	}
 
 	string ISearchArea.ToQueryString()
 	{
-		return string.Create(
-			CultureInfo.InvariantCulture,
-			$"circle:{_longitude},{_latitude},{_radiusInMeters}");
+		return $"proximity:{_longitude.ToString(CultureInfo.InvariantCulture)},{_latitude.ToString(CultureInfo.InvariantCulture)}";
 	}
 }

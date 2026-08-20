@@ -16,4 +16,27 @@ public sealed class Filter : ISearchAreaComposer
 
 
 	string ISearchAreaComposer.QueryStringKey => "filter";
+
+	IEnumerable<ISearchArea> ISearchAreaComposer.GetSearchAreas()
+	{
+		if (CountryCode is not null)
+		{
+			yield return CountryCode;
+		}
+
+		if (Place is not null)
+		{
+			yield return Place;
+		}
+
+		if (Circle is not null)
+		{
+			yield return Circle;
+		}
+
+		if (Rectangle is not null)
+		{
+			yield return Rectangle;
+		}
+	}
 }

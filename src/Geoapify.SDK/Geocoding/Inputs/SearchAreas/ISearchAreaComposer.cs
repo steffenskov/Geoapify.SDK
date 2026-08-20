@@ -3,10 +3,6 @@ namespace Geoapify.SDK.Geocoding.Inputs.SearchAreas;
 internal interface ISearchAreaComposer
 {
 	string QueryStringKey { get; }
-	CountryCodeSearchArea? CountryCode { get; }
-	PlaceSearchArea? Place { get; }
-	CircleSearchArea? Circle { get; }
-	RectangleSearchArea? Rectangle { get; }
 
 	QueryStringValue? ToQueryString()
 	{
@@ -19,26 +15,5 @@ internal interface ISearchAreaComposer
 		return new QueryStringValue(QueryStringKey, filterValue);
 	}
 
-	IEnumerable<ISearchArea> GetSearchAreas()
-	{
-		if (CountryCode is not null)
-		{
-			yield return CountryCode;
-		}
-
-		if (Place is not null)
-		{
-			yield return Place;
-		}
-
-		if (Circle is not null)
-		{
-			yield return Circle;
-		}
-
-		if (Rectangle is not null)
-		{
-			yield return Rectangle;
-		}
-	}
+	IEnumerable<ISearchArea> GetSearchAreas();
 }

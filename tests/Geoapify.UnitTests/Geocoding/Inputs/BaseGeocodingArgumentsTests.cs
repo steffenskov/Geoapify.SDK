@@ -92,7 +92,7 @@ public class FakeGeocodingArgumentsTests
 			Biases =
 			{
 				CountryCode = new CountryCodeSearchArea(CountryCode.Denmark, CountryCode.United_Kingdom_of_Great_Britain_and_Northern_Ireland),
-				Place = new PlaceSearchArea("fake")
+				Location = new LocationSearchArea(42, 13.37)
 			}
 		};
 
@@ -102,7 +102,7 @@ public class FakeGeocodingArgumentsTests
 		// Assert
 		var filterArgument = queryString.Single(qs => qs.Key == "bias");
 
-		Assert.Equal("countrycode:dk,gb|place:fake", filterArgument.Value);
+		Assert.Equal("countrycode:dk,gb|proximity:42,13.37", filterArgument.Value);
 	}
 
 	[Fact]
