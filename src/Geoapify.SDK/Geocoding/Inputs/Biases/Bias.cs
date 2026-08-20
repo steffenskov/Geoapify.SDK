@@ -11,10 +11,33 @@ namespace Geoapify.SDK.Geocoding.Inputs.Biases;
 public sealed class Bias : ISearchAreaComposer
 {
 	public CountryCodeSearchArea? CountryCode { get; set; }
-	public PlaceSearchArea? Place { get; set; }
+	public LocationSearchArea? Location { get; set; }
 	public CircleSearchArea? Circle { get; set; }
 	public RectangleSearchArea? Rectangle { get; set; }
 
 
 	string ISearchAreaComposer.QueryStringKey => "bias";
+
+	IEnumerable<ISearchArea> ISearchAreaComposer.GetSearchAreas()
+	{
+		if (CountryCode is not null)
+		{
+			yield return CountryCode;
+		}
+
+		if (Location is not null)
+		{
+			yield return Location;
+		}
+
+		if (Circle is not null)
+		{
+			yield return Circle;
+		}
+
+		if (Rectangle is not null)
+		{
+			yield return Rectangle;
+		}
+	}
 }

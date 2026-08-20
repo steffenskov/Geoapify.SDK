@@ -99,9 +99,32 @@ public class ISearchAreaComposerTests
 
 file sealed class FakeSearchAreaComposer : ISearchAreaComposer
 {
-	public string QueryStringKey => "fake";
 	public CountryCodeSearchArea? CountryCode { get; set; }
 	public PlaceSearchArea? Place { get; set; }
 	public CircleSearchArea? Circle { get; set; }
 	public RectangleSearchArea? Rectangle { get; set; }
+	public string QueryStringKey => "fake";
+
+	IEnumerable<ISearchArea> ISearchAreaComposer.GetSearchAreas()
+	{
+		if (CountryCode is not null)
+		{
+			yield return CountryCode;
+		}
+
+		if (Place is not null)
+		{
+			yield return Place;
+		}
+
+		if (Circle is not null)
+		{
+			yield return Circle;
+		}
+
+		if (Rectangle is not null)
+		{
+			yield return Rectangle;
+		}
+	}
 }
