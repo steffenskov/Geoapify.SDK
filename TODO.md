@@ -1,2 +1,4 @@
 - Support for batched queries, especially relevant for the StorageUpdateService
 - Support for the remaining APIs
+- Add NaN checks for doubles (lat/long)
+- Consider strongtypes for lat/long
